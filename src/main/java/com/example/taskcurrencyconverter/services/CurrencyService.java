@@ -7,6 +7,7 @@ import com.example.taskcurrencyconverter.repositories.CurrencyRepository;
 import com.example.taskcurrencyconverter.repositories.ValueOfDateRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -21,7 +22,8 @@ public class CurrencyService {
 
     private final CurrencyRepository currencyRepository;
     private final ValueOfDateRepository valueOfDateRepository;
-    private static final String URL = "https://www.cbr.ru/scripts/XML_daily.asp";
+    @Value("${com.example.taskcurrencyconverter.url.cbr-currency}")
+    private String URL;
     private final RestTemplate restTemplate = new RestTemplate();
 
 
