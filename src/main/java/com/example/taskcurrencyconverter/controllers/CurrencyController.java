@@ -7,6 +7,7 @@ import com.example.taskcurrencyconverter.models.User;
 import com.example.taskcurrencyconverter.services.ConversionService;
 import com.example.taskcurrencyconverter.services.CurrencyService;
 import com.example.taskcurrencyconverter.services.UserService;
+import com.example.taskcurrencyconverter.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -38,17 +39,37 @@ public class CurrencyController {
 
     @PostMapping("/convertor")
     public String createConversion(Long idFrom, Long idTo, Double valueFrom, Principal principal, Model model) {
-        User user = userService.getUserByPrincipal(principal);
+        User user;
+        if (principal != null) {
+            user = userService.getUserByPrincipal(principal);
+            if (user == null) {
+                return "error";
+            }
+        } else {
+            return "error";
+        }
         Conversion conversion = conversionService.saveConversion(user, idFrom, idTo, valueFrom);
+        if (conversion == null) {
+            model.addAttribute("message", "При конвертации произошла ошибка");
+        } else {
+            model.addAttribute("message", "Успешно конвертированно");
+            model.addAttribute("conversion", conversion);
+        }
         model.addAttribute("currencies", currencyService.listCurrency());
-        model.addAttribute("message", "Успешно конвертированно");
-        model.addAttribute("convertion", conversion);
         return "convertor";
     }
 
     @GetMapping("/convertor/history")
     public String table(Principal principal, Model model) {
-        User user = userService.getUserByPrincipal(principal);
+        User user;
+        if (principal != null) {
+            user = userService.getUserByPrincipal(principal);
+            if (user == null) {
+                return "error";
+            }
+        } else {
+            return "error";
+        }
 
         model.addAttribute("convertors", conversionService.getByUser(user));
         model.addAttribute("currencyList", currencyService.listCurrency());
@@ -62,20 +83,18 @@ public class CurrencyController {
         Currency currencyFrom = null;
         Currency currencyTo = null;
 
-        if (principal == null) {
-            return "redirect:/convertor/history";
+        if (principal != null) {
+            user = userService.getUserByPrincipal(principal);
+            if (user == null) {
+                return "error";
+            }
+        } else {
+            return "error";
         }
-        user = userService.getUserByPrincipal(principal);
 
         if (date != null && !date.equals("")) {
-            String[] splitted = date.split("-");
-            int year = Integer.parseInt(splitted[0]);
-            int mount = Integer.parseInt(splitted[1]);
-            int day = Integer.parseInt(splitted[2]);
-            localDate = LocalDate.of(year, mount, day);
+            localDate = Utils.stringToLocalDate(date);
         }
-
-
 
         if (idFrom != null) {
             currencyFrom = currencyService.getCurrencyById(idFrom);
