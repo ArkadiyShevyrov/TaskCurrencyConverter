@@ -123,4 +123,8 @@ public class CurrencyService {
         return getCurrentValueByCurrency(currency);
     }
 
+    public Currency getCurrencyById(Long id) {
+        return currencyRepository.findById(id).orElse(null);
+    }
+
 }

@@ -9,7 +9,40 @@
     <br><a href="/convertor"> Конвертор валют</a><br>
     <br><a href="/"> Главная страница</a><br>
     <h4>История конвертаций:</h4>
-    <table>
+    <form action="/convertor/history" method="post" name="filter">
+        <p>
+            <input type="date" name="date">
+        </p>
+        <select name="idFrom">
+            <option value="">
+                Не определено
+            </option>
+            <#list currencyList as currency>
+                <option value="${currency.id}">
+                    ${currency.name}
+                </option>
+            <#else>
+                <h3>Оштбкай</h3>
+            </#list>
+        </select>
+        <select name="idTo">
+            <option value="">
+                Не определено
+            </option>
+            <#list currencyList as currency>
+                <option value="${currency.id}">
+                    ${currency.name}
+                </option>
+            <#else>
+                <h3>Оштбкай</h3>
+            </#list>
+        </select>
+        <p>
+            <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+            <input type="submit" value="Отфильтровать"/>
+        </p>
+    </form>
+    <table border="1">
         <tr>
             <th>Исходящая валюта</th>
             <th>Целевая валюта</th>
@@ -26,7 +59,9 @@
                 <th>${convertor.date}</th>
             </tr>
         <#else>
-            <h3>У вас ещё нет конвертаций</h3>
+            <tr>
+                <h3>Не найдено</h3>
+            </tr>
         </#list>
     </body>
 </htmnl>
