@@ -33,6 +33,9 @@ public class CurrencyController {
 
     @GetMapping("/convertor")
     public String convention(Model model) {
+        if (model == null) {
+            return "error";
+        }
         model.addAttribute("currencies", currencyService.listCurrency());
         return "convertor";
     }
@@ -46,6 +49,9 @@ public class CurrencyController {
                 return "error";
             }
         } else {
+            return "error";
+        }
+        if (model == null) {
             return "error";
         }
         Conversion conversion = conversionService.saveConversion(user, idFrom, idTo, valueFrom);
@@ -70,6 +76,9 @@ public class CurrencyController {
         } else {
             return "error";
         }
+        if (model == null) {
+            return "error";
+        }
 
         model.addAttribute("convertors", conversionService.getByUser(user));
         model.addAttribute("currencyList", currencyService.listCurrency());
@@ -89,6 +98,9 @@ public class CurrencyController {
                 return "error";
             }
         } else {
+            return "error";
+        }
+        if (model == null) {
             return "error";
         }
 
