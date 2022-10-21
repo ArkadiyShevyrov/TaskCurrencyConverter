@@ -19,6 +19,9 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     public boolean createUser(User user) {
+        if (user == null) {
+            return false;
+        }
         String username = user.getUsername();
         if (userRepository.findByUsername(username) != null) {
             return false;

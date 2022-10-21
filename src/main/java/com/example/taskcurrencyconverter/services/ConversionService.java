@@ -20,18 +20,25 @@ public class ConversionService {
     private final ConversionRepository conversionRepository;
 
     public Conversion saveConversion(User user, Long currencyIdFrom, Long currencyIdTo, Double valueFrom) {
+        if (user == null || currencyIdFrom == null || currencyIdTo == null || valueFrom == 0 ||
+        currencyIdFrom < 0 || currencyIdTo <0 || valueFrom <0) {
+            return null;
+        }
+
         Conversion conversion = new Conversion();
         ValueOfDate valueOfDateFrom = currencyService.getValueOfDataByCurrencyID(currencyIdFrom);
         ValueOfDate valueOfDateTo = currencyService.getValueOfDataByCurrencyID(currencyIdTo);
 
-        if (valueOfDateFrom != null && valueOfDateTo != null) {
-            conversion.setValueOfDateFrom(valueOfDateFrom);
-            conversion.setValueOfDateTo(valueOfDateTo);
-            conversion.setDate(valueOfDateFrom.getDate());
-            conversion.setUser(user);
-            conversion.setValueFrom(valueFrom);
-            conversion.setValueTo(valueFrom * valueOfDateFrom.getValue() / valueOfDateTo.getValue());
+        if (valueOfDateFrom == null || valueOfDateTo == null) {
+            return null;
         }
+
+        conversion.setValueOfDateFrom(valueOfDateFrom);
+        conversion.setValueOfDateTo(valueOfDateTo);
+        conversion.setDate(valueOfDateFrom.getDate());
+        conversion.setUser(user);
+        conversion.setValueFrom(valueFrom);
+        conversion.setValueTo(valueFrom * valueOfDateFrom.getValue() / valueOfDateTo.getValue());
 
         conversionRepository.save(conversion);
 

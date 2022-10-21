@@ -32,6 +32,9 @@ public class CurrencyService {
     }
 
     public ValueOfDate getCurrentValueByCurrency(Currency currency) {
+        if (currency == null) {
+            return null;
+        }
         LocalDate date = LocalDate.now();
         if (!isValueByCurrencyAndDate(currency, date)) {
             updateValueOfDate();
@@ -110,20 +113,31 @@ public class CurrencyService {
     }
 
     private boolean isValueByCurrencyAndDate(Currency currency, LocalDate date) {
+        if (currency == null || date == null) {
+            return false;
+        }
         return valueOfDateRepository.findByCurrencyAndDate(currency, date) != null;
     }
 
     private ValueOfDate getValueByCurrencyAndDate(Currency currency, LocalDate date) {
+        if (currency == null || date == null) {
+            return null;
+        }
         return valueOfDateRepository.findByCurrencyAndDate(currency, date);
     }
 
     public ValueOfDate getValueOfDataByCurrencyID(Long id) {
+        if (id == null || id < 0) {
+            return null;
+        }
         Currency currency = currencyRepository.findById(id).orElse(null);
-        log.info(String.valueOf(currency != null));
         return getCurrentValueByCurrency(currency);
     }
 
     public Currency getCurrencyById(Long id) {
+        if (id == null || id < 0) {
+            return null;
+        }
         return currencyRepository.findById(id).orElse(null);
     }
 
