@@ -1,5 +1,6 @@
 package com.example.taskcurrencyconverter.utils;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
 
 public class Utils {
@@ -21,7 +22,7 @@ public class Utils {
             int day = Integer.parseInt(splitStr[2]);
 
             date = LocalDate.of(year, mount, day);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | DateTimeException e) {
             return null;
         }
         return date;

@@ -2,6 +2,7 @@ package com.example.taskcurrencyconverter;
 
 import com.example.taskcurrencyconverter.services.CurrencyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -12,9 +13,14 @@ public class FirstApplication {
 
     private final CurrencyService currencyService;
 
+    @Value("${com.example.taskcurrencyconverter.application}")
+    private String application;
+
     @EventListener(ApplicationReadyEvent.class)
     public void downloadCurrencyToDB() {
-        currencyService.updateCurrency();
-        currencyService.updateValueOfDate();
+        if (application != null && application.equals("true")) {
+            currencyService.updateCurrency();
+            currencyService.updateValueOfDate();
+        }
     }
 }
